@@ -3,7 +3,6 @@
 reversi project
 
 ## 20180114 log
-https://github.com/Gosicfly/Reversi_PolicyGradient/blob/master/
 
 可以干的活：
 
