@@ -1,7 +1,6 @@
-from collections import deque
 import os
 import sys
-
+from collections import deque
 import numpy as np
 import tensorflow as tf
 
@@ -11,7 +10,7 @@ class DQNAgent:
     Multi Layer Perceptron with Experience Replay
     """
 
-    def __init__(self, enable_actions, environment_name, layers, rows, cols):
+    def __init__(self, enable_actions, environment_name, layers, rows, cols , model_dir):
         # parameters
         self.name = os.path.splitext(os.path.basename(__file__))[0]
         self.environment_name = environment_name
@@ -26,7 +25,8 @@ class DQNAgent:
         #self.learning_rate = 0.005
         self.discount_factor = 0.9
         self.exploration = 0.1
-        self.model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
+        self.model_dir = model_dir
+        # self.model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
         self.model_name = "{}.ckpt".format(self.environment_name)
 
         # replay memory
@@ -47,8 +47,8 @@ class DQNAgent:
         x_flat = tf.reshape(self.x, [-1, size])
 
         # fully connected layer (32)
-        #W_fc1 = tf.Variable(tf.truncated_normal([size, 100], stddev=0.01))
-        W_fc1 = tf.Variable(tf.zeros([size, 2*64]))
+        W_fc1 = tf.Variable(tf.truncated_normal([size, 2*64], stddev=0.01))
+        # W_fc1 = tf.Variable(tf.zeros([size, 2*64]))
         b_fc1 = tf.Variable(tf.zeros([2*64]))
         h_fc1 = tf.nn.relu(tf.matmul(x_flat, W_fc1) + b_fc1)
 
@@ -66,7 +66,14 @@ class DQNAgent:
         # output layer (n_actions)
         W_out = tf.Variable(tf.truncated_normal([2*64, self.n_actions], stddev=0.01))
         b_out_init = tf.zeros([self.n_actions])
-        b_out_init = b_out_init + np.array([0.5,0,0,0,0,0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,0,0,0,0,0,0,0.5])
+        b_out_init = b_out_init + np.array([0.5,0,0,0,0,0,0,0.5,
+                                            0,0,0,0,0,0,0,0,
+                                            0,0,0,0,0,0,0,0,
+                                            0,0,0,0,0,0,0,0,
+                                            0,0,0,0,0,0,0,0,
+                                            0,0,0,0,0,0,0,0,
+                                            0,0,0,0,0,0,0,0,
+                                            0.5,0,0,0,0,0,0,0.5,0,0])
         b_out = tf.Variable(b_out_init)
         #b_out = tf.Variable(tf.zeros([self.n_actions]))
         self.y = tf.matmul(h_fc1, W_out) + b_out
@@ -93,7 +100,7 @@ class DQNAgent:
 
     def select_action(self, state, targets, epsilon):
 
-        if np.random.rand() <= epsilon:
+        if np.random.rand() > epsilon:
             # random
             return np.random.choice(targets)
         else:
@@ -161,6 +168,12 @@ class DQNAgent:
             if checkpoint and checkpoint.model_checkpoint_path:
                 self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
 
-    def save_model(self,epoch):
-        model_name_iter = self.environment_name+str(epoch)+".ckpt"
-        self.saver.save(self.sess, os.path.join(self.model_dir, model_name_iter))
+    def save_model(self, epoch):
+        """
+        epoch = 目前阶段数
+        """
+        model_name_iter = self.model_dir + self.environment_name + str(epoch)+".ckpt"
+        self.saver.save(self.sess, model_name_iter)
+
+        # model_name_iter = self.environment_name + str(epoch) + ".ckpt"
+        # self.saver.save(self.sess, os.path.join(self.model_dir, model_name_iter))
