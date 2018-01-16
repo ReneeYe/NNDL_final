@@ -28,9 +28,9 @@ reversi project
 【3】ADVERSARIAL ADVANTAGE ACTOR-CRITIC MODEL FOR TASK-COMPLETION DIALOGUE POLICY LEARNING（最后修改value学习部分可以参考这个）
 
 ## 提交文件
-	Pdf：report
-	RL_QG_agent.py 猪脚的test文件，我们测的时候肯定要改要用那个存参数的
-	Reversi 网络参数
+Pdf：report
+RL_QG_agent.py 猪脚的test文件，我们测的时候肯定要改要用那个存参数的
+Reversi 网络参数
 
 
 ## 20180115
