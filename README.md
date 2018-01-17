@@ -20,6 +20,8 @@ b. 全连接 vs. CNN(已做，CNN还在测试)【doing by YR】
 **DQN improvement**
 
 采用基于策略函数的学习（policy gradient，actor-critic去训练，TODO）【求具体解释】
+
+
 MCTS（TODO）- https://github.com/suragnair/alpha-zero-general
 
 
