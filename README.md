@@ -2,13 +2,41 @@
 
 reversi project
 
+## TODO
+
+**Fixed oppo:**
+
+a. DQN vs. rand (已做)【求全部结果 】
+b. DQN vs. greedy (TO Train on DQN)
+c. DQN vs. minimax （TO Train）
+d. DQN vs. 专家 （try to open .wtb）
+
+**self-play:**
+
+a. 两个都是一层全连接的Q 网络，参数初始化不同（已做）【求所有结果】
+b. 全连接 vs. CNN(等，就是在Q网络上做文章)【doing by YR】
+
+**DQN improvement**
+
+采用基于策略函数的学习（policy gradient，actor-critic去训练，TODO）【求具体解释】
+
+
+
+## 提交文件
+
+Pdf：report
+RL_QG_agent.py 猪脚的test文件，我们测的时候肯定要改要用那个存参数的
+Reversi 网络参数
+
+
+
 ## 20180114 log
 
 可以干的活：
 
 跑的时候记得画图/记录
 
-1 把GitHub的代码改成TensorFlow的版本
+~~1 把GitHub的代码改成TensorFlow的版本~~
 
 2 可以把reward 从0/1 改成 黑-白
 
@@ -20,19 +48,19 @@ reversi project
 
 6 想想怎么把Value函数用NN更新
 
-## 参考文献
-【1】Learning to Play Othello with Deep Neural Networks（CNN的那篇）
 
-【2】Reinforcement Learning in the Game of Othello: Learning Against a Fixed Opponent and Learning from Self-Play（主要参考程序章结构）
-
-【3】ADVERSARIAL ADVANTAGE ACTOR-CRITIC MODEL FOR TASK-COMPLETION DIALOGUE POLICY LEARNING（最后修改value学习部分可以参考这个）
-
-## 提交文件
-Pdf：report
-RL_QG_agent.py 猪脚的test文件，我们测的时候肯定要改要用那个存参数的
-Reversi 网络参数
-
-
-## 20180115
+## 20180115 log
 TF的框架
 Pytouch 没有windows版 查了差别
+
+## 20180116 log
+
+YR写完了NN self-play的代码
+
+XYQ完成了部分报告
+
+## 20180117 log
+
+YR写CNN
+
+XYQ写了greedy
