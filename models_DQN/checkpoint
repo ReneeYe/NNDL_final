@@ -1,6 +1,0 @@
-model_checkpoint_path: "reversi_expReplay_white200.ckpt"
-all_model_checkpoint_paths: "reversi_expReplay_white0.ckpt"
-all_model_checkpoint_paths: "reversi_expReplay_white50.ckpt"
-all_model_checkpoint_paths: "reversi_expReplay_white100.ckpt"
-all_model_checkpoint_paths: "reversi_expReplay_white150.ckpt"
-all_model_checkpoint_paths: "reversi_expReplay_white200.ckpt"
