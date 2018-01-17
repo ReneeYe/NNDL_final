@@ -7,19 +7,20 @@ reversi project
 **Fixed oppo:**
 
 a. DQN vs. rand (已做)【求全部结果 】
-b. DQN vs. greedy (TO Train on DQN)
-c. DQN vs. minimax （TO Train）
+b. DQN vs. greedy (TODO)
+
+c. DQN vs. minimax （已做）
 d. DQN vs. 专家 （try to open .wtb）
 
 **self-play:**
 
 a. 两个都是一层全连接的Q 网络，参数初始化不同（已做）【求所有结果】
-b. 全连接 vs. CNN(等，就是在Q网络上做文章)【doing by YR】
+b. 全连接 vs. CNN(已做，CNN还在测试)【doing by YR】
 
 **DQN improvement**
 
 采用基于策略函数的学习（policy gradient，actor-critic去训练，TODO）【求具体解释】
-
+MCTS（TODO）
 
 
 ## 提交文件
@@ -28,6 +29,8 @@ Pdf：report
 RL_QG_agent.py 猪脚的test文件，我们测的时候肯定要改要用那个存参数的
 Reversi 网络参数
 
+
+RL_QG_agent还需要在封装一下
 
 
 ## 20180114 log
