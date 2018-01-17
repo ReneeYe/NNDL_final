@@ -22,7 +22,6 @@ class DQNAgent:
         self.minibatch_size = 128
         self.replay_memory_size = 10000
         self.learning_rate = 0.001
-        #self.learning_rate = 0.005
         self.discount_factor = 0.9
         self.exploration = 0.1
         self.model_dir = model_dir
@@ -174,6 +173,3 @@ class DQNAgent:
         """
         model_name_iter = self.model_dir + self.environment_name + str(epoch)+".ckpt"
         self.saver.save(self.sess, model_name_iter)
-
-        # model_name_iter = self.environment_name + str(epoch) + ".ckpt"
-        # self.saver.save(self.sess, os.path.join(self.model_dir, model_name_iter))
