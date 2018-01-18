@@ -1,7 +1,7 @@
 from Coach import Coach
-from NNet import NNet as nn
+from othello.OthelloGame import OthelloGame as Game
+from othello.pytorch.NNet import NNetWrapper as nn
 from utils import *
-import gym
 
 args = dotdict({
     'numIters': 1000,
@@ -18,14 +18,12 @@ args = dotdict({
     'load_folder_file': ('/dev/models/8x100x50','best.pth.tar'),
 })
 
-
-
 if __name__=="__main__":
-    env = gym.make('Reversi8x8-v0')
-    nnet = nn(env) 
-    
+    g = Game(6) #game env
+    nnet = nn(g) #network
+
     if args.load_model:
         nnet.load_checkpoint(args.load_folder_file[0], args.load_folder_file[1])
 
-    c = Coach(env, nnet, args)#set train para
+    c = Coach(g, nnet, args)#set train para
     c.learn()#train

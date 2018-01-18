@@ -2,6 +2,10 @@ import math
 import numpy as np
 
 class MCTS():
+    """
+    This class handles the MCTS tree.
+    """
+
     def __init__(self, env, nnet, args):
         self.env = env
         self.nnet = nnet
@@ -14,12 +18,13 @@ class MCTS():
         self.Es = {}        # stores game.getGameEnded ended for board s
         self.Vs = {}        # stores game.getValidMoves for board s
 
-    def getActionProb(self, board, temp=1):
+    def getActionProb(self, canonicalBoard, temp=1):
 
         for i in range(self.args.numMCTSSims):
-            self.search(board)
+            self.search(canonicalBoard)
 
-        counts = [self.Nsa[(board,a)] if (board,a) in self.Nsa else 0 for a in range(self.env.board_size**2 + 1)]
+        s = canonicalBoard.tostring()
+        counts = [self.Nsa[(s,a)] if (s,a) in self.Nsa else 0 for a in range(self.env.board_size**2 + 2)]
 
         if temp==0:
             bestA = np.argmax(counts)
@@ -31,53 +36,58 @@ class MCTS():
         probs = [x/float(sum(counts)) for x in counts]
         return probs
 
-    def search(self, board):
 
-        if board not in self.Es:
-            self.Es[board] = self.game.getGameEnded(board, 1)
-        if self.Es[board]!=0:
+    def search(self, canonicalBoard):
+
+        s = canonicalBoard.tostring()
+
+            
+        if s not in self.Es:
+            self.Es[s] = utils.get_reward(canonicalBoard)
+        if self.Es[s]!=0:
             # terminal node
-            return -self.Es[board]
+            return -self.Es[s]
 
-        if board not in self.Ps:
+        if s not in self.Ps:
             # leaf node
-            self.Ps[board], v = self.nnet.predict(board)
-            valids = self.game.getValidMoves(board, 1)
-            self.Ps[board] = self.Ps[board]*valids      # masking invalid moves
-            self.Ps[board] /= np.sum(self.Ps[board])    # renormalize
+            self.Ps[s], v = self.nnet.predict(canonicalBoard)
+            valids = self.get_possible_actions(canonicalBoard, 0)
+            self.Ps[s] = self.Ps[s]*valids      # masking invalid moves
+            self.Ps[s] /= np.sum(self.Ps[s])    # renormalize
 
-            self.Vs[board] = valids
-            self.Ns[board] = 0
+            self.Vs[s] = valids
+            self.Ns[s] = 0
             return -v
 
-        valids = self.Vs[board]
+        valids = self.Vs[s]
         cur_best = -float('inf')
         best_act = -1
 
         # pick the action with the highest upper confidence bound
-        for a in range(self.game.getActionSize()):
+        for a in range(self.env.board_size**2 + 2):
             if valids[a]:
-                if (board,a) in self.Qsa:
-                    u = self.Qsa[(board,a)] + self.args.cpuct*self.Ps[board][a]*math.sqrt(self.Ns[board])/(1+self.Nsa[(board,a)])
+                if (s,a) in self.Qsa:
+                    u = self.Qsa[(s,a)] + self.args.cpuct*self.Ps[s][a]*math.sqrt(self.Ns[s])/(1+self.Nsa[(s,a)])
                 else:
-                    u = self.args.cpuct*self.Ps[board][a]*math.sqrt(self.Ns[board])     # Q = 0 ?
+                    u = self.args.cpuct*self.Ps[s][a]*math.sqrt(self.Ns[s])     # Q = 0 ?
 
                 if u > cur_best:
                     cur_best = u
                     best_act = a
 
         a = best_act
-        next_s, next_player = self.env.step(board, 1, a)
+        next_s = self.env.make_place(canonicalBoard, a, 0)
+        next_s = utils.getCanonicalForm(next_s, 0)
 
         v = self.search(next_s)
 
-        if (board,a) in self.Qsa:
-            self.Qsa[(board,a)] = (self.Nsa[(board,a)]*self.Qsa[(board,a)] + v)/(self.Nsa[(board,a)]+1)
-            self.Nsa[(board,a)] += 1
+        if (s,a) in self.Qsa:
+            self.Qsa[(s,a)] = (self.Nsa[(s,a)]*self.Qsa[(s,a)] + v)/(self.Nsa[(s,a)]+1)
+            self.Nsa[(s,a)] += 1
 
         else:
-            self.Qsa[(board,a)] = v
-            self.Nsa[(board,a)] = 1
+            self.Qsa[(s,a)] = v
+            self.Nsa[(s,a)] = 1
 
-        self.Ns[board] += 1
+        self.Ns[s] += 1
         return -v
